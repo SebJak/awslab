@@ -75,22 +75,28 @@ var getInstanceInfo = function(instanceId, callback){
 	]
 	};
 
-var output = "";
-	while(output === ""){
-	sleep(1000);
+//var output = "";
+//	while(output === ""){
+	console.log("before sleep");
+	sleep.sleep(5);
+	console.log("after sleep");
 	new AWS.EC2().describeInstances(params, function(err, data) {
 	  if (err) {
 		  	console.log(err, err.stack);
 		  	callback(err, null); 
 	  	}
 	  else{
+		console.log("getData");
+		//console.log(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
 		if(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp){
-			output = data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp;
+			callback(null, data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
 		}
 			//callback(null, data);
 		}           // successful response
 	});
-	}
+	console.log("after request");
+//	}
+//	callback(null, output);
 };
 
 exports.lab = task
