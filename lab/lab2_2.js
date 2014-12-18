@@ -11,6 +11,8 @@ var AWS = require('aws-sdk');
 
 AWS.config.loadFromPath('./config.json');
 
+var sleep = require('sleep');
+
 var task =  function(request, callback){
 	new AWS.EC2().runInstances( paramsLunchInstance,
 		function(err, data) {
@@ -21,7 +23,7 @@ var task =  function(request, callback){
 		  else{
 		  		if(data.Instances[0].InstanceId){
 				  	console.log(data.Instances[0].InstanceId);
-					getInstanceInfo(data.Instances[0].InstanceId);
+					getInstanceInfo(data.Instances[0].InstanceId, callback);
 				}
 				else{
 					callback(null, data);
@@ -54,10 +56,11 @@ SecurityGroupIds: [
   Placement: {
     AvailabilityZone: 'us-west-2c',
   },
+
 };
 
 
-var getInstanceInfo = function(instanceId){
+var getInstanceInfo = function(instanceId, callback){
 
  params = {
 	DryRun: false,
@@ -69,18 +72,25 @@ var getInstanceInfo = function(instanceId){
 		],
 	
 	}
+	]
 	};
 
+var output = "";
+	while(output === ""){
+	sleep(1000);
 	new AWS.EC2().describeInstances(params, function(err, data) {
 	  if (err) {
 		  	console.log(err, err.stack);
 		  	callback(err, null); 
 	  	}
 	  else{
-			callback(null, data);
+		if(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp){
+			output = data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp;
+		}
+			//callback(null, data);
 		}           // successful response
 	});
-	
+	}
 };
 
 exports.lab = task
