@@ -8,18 +8,11 @@ AWS.config.loadFromPath('./config.json');
 var task =  function(request, callback){
 	new AWS.EC2().describeInstances(params, function(err, data) {
 	  if (err) {
-	  	console.log(err, err.stack);
-	  	callback(err, null); 
-	  	}// an error occurred
+		  	console.log(err, err.stack);
+		  	callback(err, null); 
+	  	}
 	  else{
-		//if(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp){
-		//	  console.log(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
-		//	callback(null, data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
-		//}
-		//else{
 			callback(null, data);
-		//	console.log(data);
-		//}
 		}           // successful response
 	});
 	
