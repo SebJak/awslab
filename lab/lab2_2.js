@@ -26,9 +26,10 @@ var task =  function(request, callback){
 				  	console.log(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
 					callback(null, data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
 				}
-			else{
-				callback(null, data);
-			}           // successful response
+				else{
+					callback(null, data);
+				}  
+			}        // successful response
 	});
 	
 
