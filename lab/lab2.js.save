@@ -1,0 +1,56 @@
+var AWS = require('aws-sdk');
+
+var ip = require('ip');
+
+console.log(ip.address());
+
+AWS.config.loadFromPath('./config.json');
+
+
+var task =  function(request, callback){
+	new AWS.EC2().describeInstances(params, function(err, data) {
+	  if (err) {
+	  	console.log(err, err.stack);
+	  	callback(err, null); 
+	  	}// an error occurred
+	  else{
+		{
+console.log(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
+		for(var i=0; i< data.Reservations.length;i++){
+			for(var j=0; j< data.Reservations[i].Instances.length;j++){
+				//console.log(inst);
+				for(var k=0; k< data.Reservations[i].Instaces[j].NetworkInterfaces.length; k++){
+					callback(null, data.Reservations[i].Instaces[j].NetworkInterfaces[i].Association.PublicIp);
+				}
+			}
+		}
+		callback(null, data);
+		console.log(data);
+		}           // successful response
+	});
+	
+
+	
+}
+
+var params = {
+	DryRun: false,
+	Filters: [
+	{
+		Name: 'network-interface.addresses.private-ip-address',
+		Values:[
+			ip.address(),
+		],
+	
+	},
+	/* more items */
+	],
+	/*InstanceIds: [
+		'i-c848f4c4',
+	],*/
+//	MaxResults: 10,
+	//NextToken: 'STRING_VALUE'
+};
+
+
+exports.lab = task
