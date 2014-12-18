@@ -4,6 +4,7 @@ var ip = require('ip');
 
 AWS.config.loadFromPath('./config.json');
 
+console.log("run");
 
 var task =  function(request, callback){
 	new AWS.EC2().describeInstances(params, function(err, data) {
