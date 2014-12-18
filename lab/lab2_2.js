@@ -15,7 +15,7 @@ AWS.config.loadFromPath('./config.json');
 
 
 var task =  function(request, callback){
-	new AWS.Request().runInstances(params,
+	new AWS.EC2().runInstances(params,
 		function(err, data) {
 		  if (err) {
 			  	console.log(err, err.stack);
