@@ -11,8 +11,6 @@ var AWS = require('aws-sdk');
 
 AWS.config.loadFromPath('./config.json');
 
-var sleep = require('sleep');
-
 var task =  function(request, callback){
 	new AWS.EC2().runInstances( paramsLunchInstance,
 		function(err, data) {
@@ -21,13 +19,7 @@ var task =  function(request, callback){
 			  	callback(err, null); 
 		  	}
 		  else{
-		  		if(data.Instances[0].InstanceId){
-				  	console.log(data.Instances[0].InstanceId);
-					getInstanceInfo(data.Instances[0].InstanceId, callback);
-				}
-				else{
-					callback(null, data);
-				} 
+		  		callback(null, data);
 			//callback(null, data); 
 			}        // successful response
 	});
@@ -59,44 +51,5 @@ SecurityGroupIds: [
 
 };
 
-
-var getInstanceInfo = function(instanceId, callback){
-
- params = {
-	DryRun: false,
-	Filters: [
-	{
-		Name: 'instance-id',
-		Values:[
-			instanceId,
-		],
-	
-	}
-	]
-	};
-
-//var output = "";
-//	while(output === ""){
-	console.log("before sleep");
-	sleep.sleep(5);
-	console.log("after sleep");
-	new AWS.EC2().describeInstances(params, function(err, data) {
-	  if (err) {
-		  	console.log(err, err.stack);
-		  	callback(err, null); 
-	  	}
-	  else{
-		console.log("getData");
-		//console.log(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
-		if(data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp){
-			callback(null, data.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp);
-		}
-			//callback(null, data);
-		}           // successful response
-	});
-	console.log("after request");
-//	}
-//	callback(null, output);
-};
 
 exports.lab = task

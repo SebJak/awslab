@@ -2,6 +2,7 @@ var lab1_1 = require("./lab/lab1_1").lab
 var example_1 = require("./example_1").lab;
 var lab2 = require("./lab/lab2").lab
 var lab2_2 = require("./lab/lab2_2").lab
+var lab3 = require("./lab/lab3_1").lab
 var PORT = 8080;
 
 
